@@ -21,15 +21,15 @@ from scipy import stats
 X_AXIS_MAX = 125
 Y_AXIS_MAX = 255
 
-#
-# The input files
-#
+# The reference template
 template_filename = 'reference-images/Reflectance-Template-2.3.png'
-target_filename = 'sample-images/220444813_1500.jpg'
-#target_filename = 'sample-images/220444813.JPG'
-#target_filename = 'sample-images/220441889.JPG'
+
+# The target file to examine
+target_filename = 'sample-images/220444813_1500.jpg'  # works
+#target_filename = 'sample-images/220444813.JPG'      # works
+#target_filename = 'sample-images/220441889.JPG'      # fails
 #target_filename = 'sample-images/220445319.JPG'      # fails
-#target_filename = 'sample-images/220445388.JPG'
+#target_filename = 'sample-images/220445388.JPG'      # works
 
 # Open the target image in grayscale and color
 img_gray = cv2.imread(target_filename, 0)
