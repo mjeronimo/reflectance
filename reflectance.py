@@ -24,12 +24,12 @@ Y_AXIS_MAX = 255
 #
 # The input files
 #
-template_filename = 'Reflectance-Template-2.3.png'
-target_filename = '220444813_1500.jpg'
-#target_filename = '220444813.JPG'
-#target_filename = '220441889.JPG'
-#target_filename = '220445319.JPG'      # fails
-#target_filename = '220445388.JPG'
+template_filename = 'reference-images/Reflectance-Template-2.3.png'
+target_filename = 'sample-images/220444813_1500.jpg'
+#target_filename = 'sample-images/220444813.JPG'
+#target_filename = 'sample-images/220441889.JPG'
+#target_filename = 'sample-images/220445319.JPG'      # fails
+#target_filename = 'sample-images/220445388.JPG'
 
 # Open the target image in grayscale and color
 img_gray = cv2.imread(target_filename, 0)
@@ -119,9 +119,6 @@ if len(good)>MIN_MATCH_COUNT:
 # Get the squares in the target and reference images
 # 
 
-#cv2.imshow('result', result)
-#cv2.waitKey(0)
-
 # Get the red channel for the target image and the reference image
 img_rchannel = result[:, :, 2]
 ref_rchannel = ref_color[:, :, 2]
@@ -202,9 +199,6 @@ if circles is not None:
     cv2.imshow('out', out)
     cv2.waitKey(0)
 
-    #print "mode: ", stats.mode(out, axis=None)[0][0]
-    #print "mode: ", stats.mode(out, axis=None)
-
     histg = cv2.calcHist([out],[0],None,[256],[0,256])
     idx = second_largest(histg)
 
@@ -242,7 +236,7 @@ sol1 = (-b - math.sqrt(d))/(2*a)
 sol2 = (-b + math.sqrt(d))/(2*a)
 
 reflectance_val = sol2 if (sol1 < 0 or sol1 > X_AXIS_MAX) else sol1
-print "Reflectance of sample: ", reflectance_val
+print "Reflectance of sample: {0:0.3f}".format(reflectance_val)
 
 xs = np.arange(0.0, X_AXIS_MAX, 0.1)
 ys = polynomial(xs)
