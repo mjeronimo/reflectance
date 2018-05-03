@@ -31,6 +31,8 @@ target_filename = 'sample-images/220444813_1500.jpg'  # works
 #target_filename = 'sample-images/220445319.JPG'      # fails
 #target_filename = 'sample-images/220445388.JPG'      # works
 
+print "Processing '{}'".format(target_filename)
+
 # Open the target image in grayscale and color
 img_gray = cv2.imread(target_filename, 0)
 img_color = cv2.imread(target_filename)
@@ -243,13 +245,15 @@ ys = polynomial(xs)
 
 # Display the table of results
 
-str = "y = {0:.3f}x^2 + {1:.3f}x + {2:.3f}".format(coefs[0], coefs[1], coefs[2])
-str2 = "(x,y) = ({0:0.3f},{1:0.3f})".format(reflectance_val, r_channel_val)
+equation_str = "y = {0:.3f}x^2 + {1:.3f}x + {2:.3f}".format(coefs[0], coefs[1], coefs[2])
+str2 = "(x,y) = ({0:0.3f}, {1:0.3f})".format(reflectance_val, r_channel_val)
+#title = "Reflectance vs R Channel Mode\n{}\n".format(target_filename)
+title = "{}".format(target_filename)
 
-plt.suptitle('Reflectance vs R Channel Mode', fontsize=16)
+plt.suptitle(title, fontsize=16)
 plt.xlabel('Reflectance')
 plt.ylabel('R Channel Mode')
-plt.text(10, 225, str, fontsize=12)
+plt.text(10, 225, equation_str, fontsize=12)
 plt.text(10, 210, str2, fontsize=12)
 plt.plot(xs, ys)
 plt.axhline(y, 0.0, reflectance_val/X_AXIS_MAX, alpha=1.0, color='red', linestyle='dashed')
