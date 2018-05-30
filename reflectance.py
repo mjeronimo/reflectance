@@ -28,8 +28,12 @@ template_filename = 'reference-images/Reflectance-Template-2.3.png'
 target_filename = 'sample-images/220444813_1500.jpg'  # works
 #target_filename = 'sample-images/220444813.JPG'      # works
 #target_filename = 'sample-images/220441889.JPG'      # fails
+#target_filename = 'sample-images/220441889_1500.JPG' # fails
 #target_filename = 'sample-images/220445319.JPG'      # fails
+#target_filename = 'sample-images/220445319_1500.JPG' # fails
 #target_filename = 'sample-images/220445388.JPG'      # works
+
+#target_filename = 'sample-images/220441973-0YD.JPG'
 
 print "Processing '{}'".format(target_filename)
 
@@ -164,7 +168,8 @@ alpha = 0.8
 merged = (alpha * ref_color + (1 - alpha) * result).astype(dtype=np.uint8)
 
 cv2.imshow('img_rchannel', img_rchannel)
-cv2.imshow('merged', merged)
+#cv2.imshow('merged', merged)
+
 
 def second_largest(numbers):
     count = 0
@@ -188,27 +193,176 @@ def find_index(row, value):
 
 circles = cv2.HoughCircles(img_rchannel, cv2.HOUGH_GRADIENT, 1, 100)
 
-if circles is not None:
+if circles is not None: 
   circles = np.round(circles[0, :]).astype("int")
 
   for (x,y,r) in circles:
-    mask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
-    cv2.circle(mask, (x,y), r, (1,1,1),-1,8,0) 
-    out = img_rchannel * (mask.astype(merged.dtype))
+    if ( r > 70 ) and ( r < 100 ):
+        print "Circle of correct size found"
+        mask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
+        cv2.circle(mask, (x,y), r, (1,1,1),-1,8,0) 
+        out = img_rchannel * (mask.astype(merged.dtype))
+  
+        out[np.where(out==[0])] = [255]
+        
+        
+        cv2.imshow('out', out)
+        cv2.waitKey(0)
 
-    out[np.where(out==[0])] = [255]
+        histg = cv2.calcHist([out],[0],None,[256],[0,256])
+        idx = second_largest(histg)
 
-    cv2.imshow('out', out)
-    cv2.waitKey(0)
+        r_channel_val = find_index(histg, idx)
 
-    histg = cv2.calcHist([out],[0],None,[256],[0,256])
-    idx = second_largest(histg)
+        print "R Channel Mode of sample: ", r_channel_val
+    else:
+        print "Contrast insufficient for automatic detection"
+        mask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
+        if (r > 99):
+            #find the area the is roughly the center black circle to work from
+            cv2.circle(mask,(520,490),130,(1,1,1),-1)
+            out = img_rchannel * (mask.astype(merged.dtype))
+            out[np.where(out==[0])] = [255]
+            out2 = out
+            cv2.imshow('out2',out2)
+           
+            #user slider to get edge detection parameter
+            def nothing(self):
+                    pass
+            cv2.namedWindow("edgeout")
+            cv2.createTrackbar("edge1","edgeout",30,500,nothing)
+            while(1):
+               
+                edge1pos=cv2.getTrackbarPos("edge1","edgeout")
+                #find edges within that masked area
+                edges = cv2.Canny(out,edge1pos,50)
+                #mask down the outside a little to not get the outline of the mask as an edge
+                edgemask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)  
+                r2 = r-35
+                cv2.circle(edgemask, (x,y), r2, (1,1,1),-1,8,0)
+                edgeout = edges * (edgemask.astype(merged.dtype))
+                cv2.imshow('edgeout',edgeout)
+                k = cv2.waitKey(1) & 0xFF
+                if k == ord('q'):
+                    break
+            
+            circles2 = cv2.HoughCircles(edgeout, cv2.HOUGH_GRADIENT, 2, 100, param1=20, param2=30, minRadius=70, maxRadius=90) 
+            #if we find a suitable circle from the edge detection image we will do our calculation on that circle
+            #additionally we will print the detected circle as a verification step
+            if circles2 is not None: 
+                circles2 = np.round(circles2[0, :]).astype("int")
+               
+            if circles2 is not None and (circles2[0,2] > 65) and (circles2[0,2] < 100):
+                for (x2,y2,r3) in circles2:  
+                    mask2 = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
+                    cv2.circle(mask2, (x2,y2), r3, (1,1,1),-1,8,0) 
+                    out = img_rchannel * (mask2.astype(merged.dtype))
+                    out[np.where(out==[0])] = [255]
+                    
+                    cv2.circle(merged, (x2,y2),r3,(0,255,0),4)
+                    cv2.imshow('detected circles',merged)
 
-    r_channel_val = find_index(histg, idx)
+            else:
+                cv2.destroyWindow('edgeout')
+             
+                
+            #If the circle detection doesn't work, we will attempt to find the 4 printed boxes on the filter
+            
+            #A user-input adjustable mask parameter is used to make 4 printed codes clearly
+            #visible, then contour finding to get center of filter
+             
+                #user input window setup. Adjust the slider until only the four printed boxes are visible
+                def nothing(self):
+                    pass    
+                cv2.namedWindow("edgeout")
+                cv2.createTrackbar("edge1","edgeout",30,500,nothing)
+                while(1):
+                    edge1pos=cv2.getTrackbarPos("edge1","edgeout")
+                    #find edges within that masked area
+                    edges = cv2.Canny(out,edge1pos,50)
+                    #mask down the outside a little to not get the outline of the mask as an edge
+                    edgemask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)  
+                    r2 = r-35
+                    cv2.circle(edgemask, (x,y), r2, (1,1,1),-1,8,0)
+                    edgeout = edges * (edgemask.astype(merged.dtype))
+                    cv2.imshow('edgeout',edgeout)
+                    k = cv2.waitKey(1) & 0xFF
+                    if k == ord('q'):
+                        break
+                
+                cv2.destroyWindow('edgeout')
+                #dilate detected edges to make contour detection simpler 
+                ellipse = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11,11))
+                edgeout_dilate = cv2.dilate(edgeout,ellipse,iterations=1)
+                
+                #detect contours       
+                image, contours, hierarchy = cv2.findContours(edgeout_dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                edgeout_RGB = cv2.cvtColor(edgeout_dilate, cv2.COLOR_GRAY2BGR)
+                contours_img = cv2.drawContours(edgeout_RGB, contours, -1, (255, 0, 0), 1)
+                
+                
+                #Draw enclosing circles for the 4 contours
+                count = 0
+                while count < 4:
+                    (x,y),radius = cv2.minEnclosingCircle(contours[count])
+                    center = (int(x),int(y))
+                    radius = int(radius)
+                    cv2.circle(contours_img,center,radius,(0,255,0),1)
+                    count +=1
+                 
+                #calculate average center positon from center of each contour    
+                M = cv2.moments(contours[0])
+                x1 = int(M["m10"] / M["m00"])
+                y1 = int(M["m01"] / M["m00"])
+                
+                M = cv2.moments(contours[1])
+                x2 = int(M["m10"] / M["m00"])
+                y2 = int(M["m01"] / M["m00"])
+                
+                M = cv2.moments(contours[2])
+                x3 = int(M["m10"] / M["m00"])
+                y3 = int(M["m01"] / M["m00"])
+                
+                M = cv2.moments(contours[3])
+                x4 = int(M["m10"] / M["m00"])
+                y4 = int(M["m01"] / M["m00"])
+        
+                x_avg = ( x1 + x2 + x3 + x4 ) / 4
+                y_avg = ( y1 + y2 + y3 + y4 ) / 4
+                print x_avg
+                print y_avg
+                
+                #mask circle from center of contour averages
+                cv2.circle(out, (x_avg,y_avg), 84, (0,0,0),2,8,0)
+                cv2.imshow('contours_img',contours_img)       
+                mask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
+                cv2.circle(mask, (x_avg,y_avg), 84, (1,1,1),-1,8,0) 
+                out = img_rchannel * (mask.astype(merged.dtype))
+        
+                out[np.where(out==[0])] = [255]
 
-    print "R Channel Mode of sample: ", r_channel_val
+            
+# =============================================================================
+#         else:
+#             #if automatic detection fails, hard coded (center of template) location is specified: 
+#             cv2.circle(mask,(540,480),84,(1,1,1),-1)
+#             out = img_rchannel * (mask.astype(merged.dtype))
+#   
+#             out[np.where(out==[0])] = [255]
+# =============================================================================
+            
+       
+        cv2.imshow('out', out)
+        cv2.waitKey(0)
 
+        histg = cv2.calcHist([out],[0],None,[256],[0,256])
+        idx = second_largest(histg)
+
+        r_channel_val = find_index(histg, idx)
+
+        print "R Channel Mode of sample: ", r_channel_val   
 cv2.destroyAllWindows()
+
 
 x = [cal_01.reflectance, cal_02.reflectance, cal_03.reflectance, cal_05.reflectance, cal_06.reflectance,
 	cal_07.reflectance, cal_09.reflectance, cal_10.reflectance, cal_11.reflectance]
@@ -222,7 +376,7 @@ plt.axis([0, X_AXIS_MAX, 0, Y_AXIS_MAX])
 plt.grid(True)
 plt.plot(x, y, 'ro')
 
-coefs = np.polyfit(x, y, 2)
+coefs = np.polyfit(x, y, 2,w=np.sqrt(y))
 polynomial = np.poly1d(coefs)
 
 # Solve the quadratic equation for x
