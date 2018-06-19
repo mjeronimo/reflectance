@@ -35,7 +35,7 @@ target_filename = 'sample-images/220444813_1500.jpg'  # works
 
 #target_filename = 'sample-images/220441973-0YD.JPG'
 
-print "Processing '{}'".format(target_filename)
+print("Processing '{}'".format(target_filename))
 
 # Open the target image in grayscale and color
 img_gray = cv2.imread(target_filename, 0)
@@ -152,16 +152,16 @@ img_10 = Square("img_10", img_rchannel, 769, 450)
 img_11 = Square("img_11", img_rchannel, 769, 600)
 
 # Print the table of reflectance/R channel values
-print 'Reflectance  R Channel Mode'
-print '%8s' % cal_11.reflectance, '%12s' % img_11.mode()
-print '%8s' % cal_10.reflectance, '%12s' % img_10.mode()
-print '%8s' % cal_09.reflectance, '%12s' % img_09.mode()
-print '%8s' % cal_07.reflectance, '%12s' % img_07.mode()
-print '%8s' % cal_06.reflectance, '%12s' % img_06.mode()
-print '%8s' % cal_05.reflectance, '%12s' % img_05.mode()
-print '%8s' % cal_03.reflectance, '%12s' % img_03.mode()
-print '%8s' % cal_02.reflectance, '%12s' % img_02.mode()
-print '%8s' % cal_01.reflectance, '%12s' % img_01.mode()
+print('Reflectance  R Channel Mode')
+print('%8s' % cal_11.reflectance, '%12s' % img_11.mode())
+print('%8s' % cal_10.reflectance, '%12s' % img_10.mode())
+print('%8s' % cal_09.reflectance, '%12s' % img_09.mode())
+print('%8s' % cal_07.reflectance, '%12s' % img_07.mode())
+print('%8s' % cal_06.reflectance, '%12s' % img_06.mode())
+print('%8s' % cal_05.reflectance, '%12s' % img_05.mode())
+print('%8s' % cal_03.reflectance, '%12s' % img_03.mode())
+print('%8s' % cal_02.reflectance, '%12s' % img_02.mode())
+print('%8s' % cal_01.reflectance, '%12s' % img_01.mode())
 
 # Create a merged image for display
 alpha = 0.8
@@ -198,7 +198,7 @@ if circles is not None:
 
   for (x,y,r) in circles:
     if ( r > 70 ) and ( r < 100 ):
-        print "Circle of correct size found"
+        print("Circle of correct size found")
         mask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
         cv2.circle(mask, (x,y), r, (1,1,1),-1,8,0) 
         out = img_rchannel * (mask.astype(merged.dtype))
@@ -214,9 +214,9 @@ if circles is not None:
 
         r_channel_val = find_index(histg, idx)
 
-        print "R Channel Mode of sample: ", r_channel_val
+        print("R Channel Mode of sample: ", r_channel_val)
     else:
-        print "Contrast insufficient for automatic detection"
+        print("Contrast insufficient for automatic detection")
         mask = np.zeros((merged.shape[0], merged.shape[1]), dtype=np.uint8)
         if (r > 99):
             #find the area the is roughly the center black circle to work from
@@ -329,8 +329,8 @@ if circles is not None:
         
                 x_avg = ( x1 + x2 + x3 + x4 ) / 4
                 y_avg = ( y1 + y2 + y3 + y4 ) / 4
-                print x_avg
-                print y_avg
+                print(x_avg)
+                print(y_avg)
                 
                 #mask circle from center of contour averages
                 cv2.circle(out, (x_avg,y_avg), 84, (0,0,0),2,8,0)
@@ -360,7 +360,7 @@ if circles is not None:
 
         r_channel_val = find_index(histg, idx)
 
-        print "R Channel Mode of sample: ", r_channel_val   
+        print("R Channel Mode of sample: ", r_channel_val)
 cv2.destroyAllWindows()
 
 
@@ -392,7 +392,7 @@ sol1 = (-b - math.sqrt(d))/(2*a)
 sol2 = (-b + math.sqrt(d))/(2*a)
 
 reflectance_val = sol2 if (sol1 < 0 or sol1 > X_AXIS_MAX) else sol1
-print "Reflectance of sample: {0:0.3f}".format(reflectance_val)
+print("Reflectance of sample: {0:0.3f}".format(reflectance_val))
 
 xs = np.arange(0.0, X_AXIS_MAX, 0.1)
 ys = polynomial(xs)
