@@ -41,7 +41,7 @@ class ManualDetector:
 
     view.setGeometry(new_x, new_y, width, height)
     view.setTitle(filename)
-    view.setFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+    #view.setFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
     view.show()
 
     # Grab the root QML object so we can wire up the quit signal

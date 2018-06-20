@@ -13,11 +13,10 @@ detector = ManualDetector(app)
 # here to demonstrate
 filenames = ['reference-images/Reflectance-Template-2.3.png', 'reference-images/mt-hood.png']
 
-
 # For each filename call getFilterInfo to get and display the filter data
 for filename in filenames:
   (centerX, centerY, radius) = detector.getFilterInfo(filename)
-  print("Info for '", filename, "'")
+  print("Info for '" + filename + "'")
   print("  centerX: ", centerX)
   print("  centerY: ", centerY)
   print("  radius: ", radius)
