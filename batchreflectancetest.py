@@ -6,25 +6,18 @@ Created on Thu Jun 21 12:20:06 2018
 """
 
 from reflectanceauto2 import reflectancecalculator
+import sys
 import glob
 import os
 import cv2
 import numpy as np
-#
+from PyQt5.QtWidgets import QApplication
 
-#set working directory
-os.chdir('c:/program files/reflectance method/reflectance/sample-images/1/')
+app = QApplication(sys.argv)
 
-# Get images
-imgs = glob.glob('*.jpg')
-#imgs.extend(glob.glob('*.jpeg'))
+# Get name of images to process
+imgs = glob.glob('sample-images/1/*.jpg')
 
 for img in imgs:
-    #currentimagegray = cv2.imread(img,0)
     currentimage = cv2.imread(img)
-#    cv2.imshow('Current Image',currentimage)
-#    cv2.waitKey(0)
-#    cv2.destroyAllWindows()
-#This last step doesn't work yet.  
-    reflectancecalculator(currentimage)
-
+    reflectancecalculator(app, currentimage, img)

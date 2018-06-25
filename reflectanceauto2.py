@@ -21,11 +21,11 @@ from PyQt5.QtWidgets import QApplication
 
 import csv 
 
-def reflectancecalculator(target):
+def reflectancecalculator(app, target, target_filename):
     
     #Stuff for QML detector
     # This needs to be done first. Couldn't find a way to put it in the ManualDetector
-    app = QApplication(sys.argv)
+    #app = QApplication(sys.argv)
     
     # Create the ManualDetector which will be used for successive images
     detector = ManualDetector(app)
@@ -54,15 +54,14 @@ def reflectancecalculator(target):
     
     img_gray = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
     img_color = target
-    print(img_gray.dtype)
-    print(img_color.dtype)
-    cv2.imshow('Current Image',img_gray)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    cv2.imshow('Current Image',img_color)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    
+    #print(img_gray.dtype)
+    #print(img_color.dtype)
+    #cv2.imshow('Current Image',img_gray)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+    #cv2.imshow('Current Image',img_color)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
     
     # Open the template in grayscale and color
     ref_gray = cv2.imread(template_filename, 0)
@@ -292,6 +291,7 @@ def reflectancecalculator(target):
     plt.show()
     
     #write values to .csv
-    with open('C:/Users/jeronimo/Pictures/Centre 2/Centre2062118.csv', 'a') as csvfile:
+    #with open('C:/Users/jeronimo/Pictures/Centre 2/Centre2062118.csv', 'a') as csvfile:
+    with open('Centre2062118.csv', 'a') as csvfile:
         reflectwriter = csv.writer(csvfile, delimiter=',')
         reflectwriter.writerow([target_filename] + ["Reflectance:"] + [reflectance_val])
