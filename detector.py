@@ -1,10 +1,7 @@
 import os
 import sys
-
 from OpenGL import GL
-
 import PyQt5
-
 from PyQt5 import QtQuick
 from PyQt5 import QtCore
 from PyQt5 import QtQml

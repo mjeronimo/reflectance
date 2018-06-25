@@ -11,7 +11,7 @@ detector = ManualDetector(app)
 # Specify a list of input filenames. This could be a set of files
 # in a particular directory, for example. Just hardcode a few filenames
 # here to demonstrate
-filenames = ['reference-images/Reflectance-Template-2.3.png', 'reference-images/mt-hood.png']
+filenames = ['reference-images/Reflectance-Template-2.3.png', 'C:/Users/jeronimo/Pictures/Centre 1/Centre 1/test1.jpg']
 
 # For each filename call getFilterInfo to get and display the filter data
 for filename in filenames:

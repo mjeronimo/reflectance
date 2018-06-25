@@ -11,7 +11,7 @@ Item {
 
   property int centerX: 100
   property int centerY: 0
-  property int radius: 140 
+  property int radius: 80 
 
   property bool positionLocked: false
   property bool nudging: false
