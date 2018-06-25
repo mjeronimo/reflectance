@@ -41,7 +41,7 @@ template_filename = 'reference-images/Reflectance-Template-2.3.png'
 
 # The target file to examine
 
-target_filename = 'c:/program files/reflectance method/reflectance/sample-images/1/resized_220440509.JPG'
+target_filename = 'C:/Users/jeronimo/Pictures/Centre 2/resized/resized_-2204399702140231703-.jpg'
 
 print("Processing '{}'".format(target_filename))
 
@@ -277,6 +277,6 @@ plt.axvline(reflectance_val, 0.0, y/Y_AXIS_MAX, alpha=1.0, color='red', linestyl
 plt.show()
 
 #write values to .csv
-with open('C:/Users/jeronimo/Pictures/Centre 2/Centre2062118.csv', 'a') as csvfile:
+with open('C:/Users/jeronimo/Pictures/Centre 2/Centre2-062518.csv', 'a') as csvfile:
     reflectwriter = csv.writer(csvfile, delimiter=',')
     reflectwriter.writerow([target_filename] + ["Reflectance:"] + [reflectance_val])
