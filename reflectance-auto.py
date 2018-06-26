@@ -21,7 +21,9 @@ import sys
 from detector import ManualDetector
 from PyQt5.QtWidgets import QApplication
 
-import csv 
+import csv
+import datetime
+ 
 #Stuff for QML detector
 # This needs to be done first. Couldn't find a way to put it in the ManualDetector
 app = QApplication(sys.argv)
@@ -41,7 +43,7 @@ template_filename = 'reference-images/Reflectance-Template-2.3.png'
 
 # The target file to examine
 
-target_filename = 'sample-images/1/resized_220440509.JPG'
+target_filename = 'sample-images/resized/resized_-2204422862140231703-.JPG'
 
 print("Processing '{}'".format(target_filename))
 
@@ -277,6 +279,11 @@ plt.axvline(reflectance_val, 0.0, y/Y_AXIS_MAX, alpha=1.0, color='red', linestyl
 plt.show()
 
 #write values to .csv
-with open('output/Centre2062118.csv', 'a') as csvfile:
+csvname = "Reflectance "+datetime.datetime.today().strftime("%m-%d-%Y")
+
+print("Saving results to: " + csvname + ".csv")
+
+with open(str(csvname)+".csv", 'a', newline='') as csvfile:
     reflectwriter = csv.writer(csvfile, delimiter=',')
-    reflectwriter.writerow([target_filename] + ["Reflectance:"] + [reflectance_val])
+    reflectwriter.writerow([target_filename] + ["Reflectance: "] + [reflectance_val] + 
+                           ["X: "] + [centerX] + ["Y: "] + [centerY] + ["radius"] + [radius])

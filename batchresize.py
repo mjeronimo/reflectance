@@ -13,7 +13,7 @@ import os
 import numpy as np
 
 #set working directory
-os.chdir('c:/users/jeronimo/pictures/centre 2/')
+os.chdir('c:/users/jeronimo/pictures/centre 1/centre 1/')
 
 # Get images
 imgs = glob.glob('*.jpg')

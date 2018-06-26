@@ -12,12 +12,17 @@ import os
 import cv2
 import numpy as np
 from PyQt5.QtWidgets import QApplication
+import datetime
 
 app = QApplication(sys.argv)
 
-# Get name of images to process
+csvname = "Reflectance "+datetime.datetime.today().strftime("%m-%d-%Y")
+
+print("Saving results to:" + csvname)
+
+# Get name of images to process - specify directory to look in
 imgs = glob.glob('sample-images/1/*.jpg')
 
 for img in imgs:
     currentimage = cv2.imread(img)
-    reflectancecalculator(app, currentimage, img)
+    reflectancecalculator(app, currentimage, img, csvname)

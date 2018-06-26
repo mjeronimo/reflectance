@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import QApplication
 
 import csv 
 
-def reflectancecalculator(app, target, target_filename):
+def reflectancecalculator(app, target, target_filename, csv_filename):
     
     #Stuff for QML detector
     # This needs to be done first. Couldn't find a way to put it in the ManualDetector
@@ -41,19 +41,12 @@ def reflectancecalculator(app, target, target_filename):
     template_filename = 'reference-images/Reflectance-Template-2.3.png'
     
     # The target file to examine
-    
-    #target_filename = 'C:/Users/jeronimo/Pictures/Centre 2/resized/resized_220439926.jpg'
-    
-    #print("Processing '{}'".format(target_filename))
-    
+        
     # Open the target image in grayscale and color
-    
-    # This bit is an easy to check to see that we got the images into the function
-    # and that they are the correct dtype
-    # It appears to work, but SIFT still fails!
     
     img_gray = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
     img_color = target
+   
     #print(img_gray.dtype)
     #print(img_color.dtype)
     #cv2.imshow('Current Image',img_gray)
@@ -291,7 +284,8 @@ def reflectancecalculator(app, target, target_filename):
     plt.show()
     
     #write values to .csv
-    #with open('C:/Users/jeronimo/Pictures/Centre 2/Centre2062118.csv', 'a') as csvfile:
-    with open('Centre2062118.csv', 'a') as csvfile:
+
+    with open(str(csv_filename)+".csv", 'a', newline='') as csvfile:
         reflectwriter = csv.writer(csvfile, delimiter=',')
-        reflectwriter.writerow([target_filename] + ["Reflectance:"] + [reflectance_val])
+        reflectwriter.writerow([target_filename] + ["Reflectance: "] + [reflectance_val] + 
+                           ["X: "] + [centerX] + ["Y: "] + [centerY] + ["radius"] + [radius])
