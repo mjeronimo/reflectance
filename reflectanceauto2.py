@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import QApplication
 
 import csv 
 
-def reflectancecalculator(app, target, target_filename, csv_filename):
+def reflectancecalculator(app, target, target_filename, csv_filename, target_color):
     
     #Stuff for QML detector
     # This needs to be done first. Couldn't find a way to put it in the ManualDetector
@@ -100,7 +100,7 @@ def reflectancecalculator(app, target, target_filename, csv_filename):
     #
     
     # Create a SIFT feature detector
-    sift = cv2.xfeatures2d.SIFT_create()
+    sift = cv2.SIFT_create()
     
     # Find the keypoints and descriptors using SIFT
     kp1,des1 = sift.detectAndCompute(img_gray, None)
@@ -141,8 +141,16 @@ def reflectancecalculator(app, target, target_filename, csv_filename):
     # 
     
     # Get the red channel for the target image and the reference image
-    img_rchannel = result[:, :, 2]
-    ref_rchannel = ref_color[:, :, 2]
+    if target_color == "blue":
+        color = 0
+    elif target_color == "green":
+        color = 1
+    elif target_color == "red":
+        color = 2
+    else:
+        print("ERROR: Input red, green, or blue as target_color")
+    img_rchannel = result[:, :, color]
+    ref_rchannel = ref_color[:, :, color]
     
     # The calibration squares include their associated reflectance values
     cal_01 = Square("cal_01", ref_rchannel, 169, 600, 3.4)
@@ -288,4 +296,4 @@ def reflectancecalculator(app, target, target_filename, csv_filename):
     with open(str(csv_filename)+".csv", 'a', newline='') as csvfile:
         reflectwriter = csv.writer(csvfile, delimiter=',')
         reflectwriter.writerow([target_filename] + ["Reflectance: "] + [reflectance_val] + 
-                           ["X: "] + [centerX] + ["Y: "] + [centerY] + ["radius"] + [radius])
+                           ["X: "] + [centerX] + ["Y: "] + [centerY] + ["radius"] + [radius] + ["channel:"] + [target_color])

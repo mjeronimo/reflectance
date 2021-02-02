@@ -8,9 +8,9 @@ Created on Thu Jun 21 12:20:06 2018
 from reflectanceauto2 import reflectancecalculator
 import sys
 import glob
-import os
+#import os
 import cv2
-import numpy as np
+#import numpy as np
 from PyQt5.QtWidgets import QApplication
 import datetime
 
@@ -25,4 +25,4 @@ imgs = glob.glob('sample-images/1/*.jpg')
 
 for img in imgs:
     currentimage = cv2.imread(img)
-    reflectancecalculator(app, currentimage, img, csvname)
+    reflectancecalculator(app, currentimage, img, csvname, "green")
